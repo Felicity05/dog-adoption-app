@@ -1,8 +1,17 @@
-<<<<<<< HEAD
-# dog-adoption-app
 Dog adoption app
 =======
 # React + TypeScript + Vite
+
+## Follow the below steps to run the project locally 
+
+1- Clone the GitHub repo on yor local machine \
+2- Navigate to the directory you just coned \
+3- Run the below commands 
+
+``yarn install``
+``yarn start``
+
+----
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
@@ -56,4 +65,3 @@ export default tseslint.config({
   },
 })
 ```
->>>>>>> 5bd4477 (initial commit poc)

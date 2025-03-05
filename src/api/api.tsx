@@ -8,8 +8,6 @@ const dogs_api = axios.create({
     withCredentials: true
 });
 
-
-
 export const authenticate = async (user: User) => {
     const response = await dogs_api.post("/auth/login",
         {
@@ -18,12 +16,13 @@ export const authenticate = async (user: User) => {
         },
     );
 
-    console.log(response.headers);
     return response;
 };
 
 //returns an object containing an array of ids to be used with the dogs endpoint
-export const search = async ({breeds, name, zipCodes, minAge, maxAge, size, from, sortCriteria, sortOrder}:FilterOptions): Promise<SearchResults> => {
+export const search = async ({breeds, name, zipCodes, minAge, maxAge,
+                                 size, from, sortCriteria, sortOrder}: FilterOptions): Promise<SearchResults> => {
+
     const sort = `${sortCriteria}:${sortOrder}`;
 
     const response = await dogs_api.get("/dogs/search", {
@@ -38,6 +37,7 @@ export const search = async ({breeds, name, zipCodes, minAge, maxAge, size, from
             sort,
         },
     });
+
     return response.data;
 }
 

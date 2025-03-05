@@ -11,7 +11,7 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({picture, name, age, breed, location}) => {
    return (
-      <div className="max-w-sm rounded overflow-hidden shadow-lg w-[250px] relative
+      <div className="max-w-sm rounded overflow-hidden shadow-lg w-[300px] relative
          bg-white ">
          <div className="flex items-center justify-end absolute right-1 top-1">
             <a className="text-gray-400" href="#">

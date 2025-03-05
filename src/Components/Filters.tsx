@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from "react";
 import {getDogsBreeds, search} from "../api/api.tsx";
 import MagentaButton from "./MagentaButton.tsx";
-import {capitalize} from "../utils.tsx";
 import { FilterOptions, SortCriteria } from "../api/types.tsx";
+import SortResults from "./SortResults.tsx";
 
 interface FilterProps {
    onFilterChange: (filters: FilterOptions) => void;
@@ -75,11 +75,12 @@ const Filters: React.FC<FilterProps> = ({onFilterChange}) => {
    }
 
    return (
-      <div className="p-4 bg-white rounded shadow-md space-y-4 w-full flex flex-col items-center">
-         <h2 className="text-xl font-bold">Refine Your Search</h2>
+      <div className="p-5 bg-white rounded shadow-md space-y-4 w-full flex flex-col items-center">
+         <h2 className="text-xl w-[250px] font-bold">Refine Your Search</h2>
+
          {/* Breed Dropdown */}
-         <div>
-            <label className="block pl-2 mb-2 text-lg font-medium text-gray-700" htmlFor="breeds">
+         <div className="w-full">
+            <label className="block w-full pl-2 mb-2 text-lg font-medium text-gray-700" htmlFor="breeds">
                Breed
             </label>
             <select
@@ -87,7 +88,7 @@ const Filters: React.FC<FilterProps> = ({onFilterChange}) => {
                name="breeds"
                value={filters.breeds}
                onChange={handleInputChange}
-               multiple
+               // multiple
                className="block w-full px-2 py-2 border-2 border-[#890A74] rounded
                            focus:outline-none focus:border-[#FFA900] overflow-ellipsis"
             >
@@ -101,7 +102,7 @@ const Filters: React.FC<FilterProps> = ({onFilterChange}) => {
          </div>
 
          {/* Name Input */}
-         <div>
+         <div className="w-full">
             <label className="block pl-2 mb-2 text-lg font-medium text-gray-700" htmlFor="name">
                Name
             </label>
@@ -149,39 +150,10 @@ const Filters: React.FC<FilterProps> = ({onFilterChange}) => {
          </div>
 
          {/* Sort Section */}
-         <div className="flex flex-col gap-2 pt-2">
-            <h2 className="block mb-2 text-xl font-bold text-gray-700">
-               Sort
-            </h2>
-            <div className="flex gap-2">
-               <select
-                  id="sortCriteria"
-                  name="sortCriteria"
-                  value={filters.sortCriteria}
-                  onChange={handleInputChange}
-                  className="block w-full py-2 px-2 border-2 border-[#890A74] rounded
-                              focus:outline-none focus:border-[#FFA900]"
-               >
-                  {(Object.values(SortCriteria).map((criteria) => (
-                     <option key={criteria} value={criteria}>{capitalize(criteria)}</option>
-                  )))}
-               </select>
-               <select
-                  id="sortOrder"
-                  name="sortOrder"
-                  value={filters.sortOrder}
-                  onChange={handleInputChange}
-                  className="block w-full py-2 px-2 border-2 border-[#890A74] rounded
-                              focus:outline-none focus:border-[#FFA900] overflow-ellipsis"
-               >
-                  <option value="asc">Ascending</option>
-                  <option value="desc">Descending</option>
-               </select>
-            </div>
-         </div>
+         <SortResults filters={filters} onChange={handleInputChange} />
 
-      {/* Submit */}
-         <div className="flex flex-col gap-2 w-full">
+         {/* Submit */}
+         <div className="flex flex-col gap-2 ">
             <MagentaButton label='Apply Filters' buttonType='primary' disabled={false}
                            onClick={handleApplyFilters}/>
             <MagentaButton label='Clear Filters' buttonType='primary' disabled={false}
