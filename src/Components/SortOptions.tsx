@@ -2,7 +2,7 @@ import {FilterOptions, SortCriteria} from "../api/types.tsx";
 import React from "react";
 import {capitalize} from "../utils.tsx";
 
-const SortResults = (props: { filters: FilterOptions,
+const SortOptions = (props: { filters: FilterOptions,
    onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void,
 }) => {
    return (
@@ -40,4 +40,4 @@ const SortResults = (props: { filters: FilterOptions,
    )
 }
 
-export default SortResults;
+export default SortOptions;

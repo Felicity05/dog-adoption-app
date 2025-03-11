@@ -1,8 +1,9 @@
-import React, {useState, useEffect} from "react";
+import React, {useState, useEffect, useRef} from "react";
 import {getDogsBreeds, search} from "../api/api.tsx";
 import MagentaButton from "./MagentaButton.tsx";
 import { FilterOptions, SortCriteria } from "../api/types.tsx";
-import SortResults from "./SortResults.tsx";
+import SortOptions from "./SortOptions.tsx";
+import MultiSelectDropdown from "./MultiSelectDropdown.tsx";
 
 interface FilterProps {
    onFilterChange: (filters: FilterOptions) => void;
@@ -20,6 +21,7 @@ const filtersInitialState: FilterOptions = {
 const Filters: React.FC<FilterProps> = ({onFilterChange}) => {
    const [breeds, setBreeds] = useState<string[]>([]);
    const [filters, setFilters] = useState<FilterOptions>(filtersInitialState);
+   const optionsListRef = useRef<HTMLUListElement>(null);
 
    useEffect(() => {
       getDogsBreeds().then(r => {
@@ -31,19 +33,26 @@ const Filters: React.FC<FilterProps> = ({onFilterChange}) => {
       e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
    ) => {
       const {name, value} = e.target;
-      const options = (e.target as HTMLSelectElement).options;
+      // const options = (e.target as HTMLSelectElement).options;
       let newValue;
 
-      if (e.target instanceof HTMLSelectElement && e.target.multiple) {
-         // Collect selected options as an array
-         newValue = Array.from(options)
-            .filter(option => option.selected)
-            .map(option => option.value);
+      const isChecked = (e.target as HTMLInputElement).checked;
+      const option = e.target.value;
 
-         console.log(newValue)
+      const selectedOptionSet = new Set(filters.breeds);
+
+      if (isChecked) {
+         selectedOptionSet.add(option);
       } else {
-         newValue = name === "minAge" || name === "maxAge" ? (value ? +value : null) : value;
+         selectedOptionSet.delete(option);
       }
+
+      console.log(selectedOptionSet);
+
+      if(name === "breeds") {
+         newValue = Array.from(selectedOptionSet);
+      } else
+         newValue = name === "minAge" || name === "maxAge" ? (value ? +value : null) : value;
 
       // Trim whitespace
       if(name === "name") {
@@ -74,32 +83,25 @@ const Filters: React.FC<FilterProps> = ({onFilterChange}) => {
       search({...filters}).then(r => console.log("filtered search=", r))
    }
 
+   const clearFilters = () => {
+      const options: HTMLUListElement | null = optionsListRef.current;
+      if(options !== null){
+         const optionsInputs = (options as HTMLUListElement).querySelectorAll("input");
+         optionsInputs.forEach((input: { checked: boolean; }) => {
+            input.checked = false;
+         });
+      }
+
+      setFilters(filtersInitialState);
+   }
+
    return (
       <div className="p-5 bg-white rounded shadow-md space-y-4 w-full flex flex-col items-center">
          <h2 className="text-xl w-[250px] font-bold">Refine Your Search</h2>
 
          {/* Breed Dropdown */}
-         <div className="w-full">
-            <label className="block w-full pl-2 mb-2 text-lg font-medium text-gray-700" htmlFor="breeds">
-               Breed
-            </label>
-            <select
-               id="breeds"
-               name="breeds"
-               value={filters.breeds}
-               onChange={handleInputChange}
-               // multiple
-               className="block w-full px-2 py-2 border-2 border-[#890A74] rounded
-                           focus:outline-none focus:border-[#FFA900] overflow-ellipsis"
-            >
-               <option value="">All Breeds</option>
-               {breeds.map((breed) => (
-                  <option key={breed} value={breed}>
-                     {breed}
-                  </option>
-               ))}
-            </select>
-         </div>
+         <MultiSelectDropdown filters={filters} onFilterChange={handleInputChange} breeds={breeds}
+                              optionsListRef={optionsListRef}/>
 
          {/* Name Input */}
          <div className="w-full">
@@ -121,6 +123,7 @@ const Filters: React.FC<FilterProps> = ({onFilterChange}) => {
                <p className="text-red-500 text-xs pt-2 pl-2">Name can only contain alphabetic characters.</p>}
          </div>
 
+         {/*Age Inputs*/}
          <div className="flex flex-col gap-2">
             <label className="block pl-2 mb-2 text-lg font-medium text-gray-700">
                Age
@@ -150,14 +153,14 @@ const Filters: React.FC<FilterProps> = ({onFilterChange}) => {
          </div>
 
          {/* Sort Section */}
-         <SortResults filters={filters} onChange={handleInputChange} />
+         <SortOptions filters={filters} onChange={handleInputChange}/>
 
          {/* Submit */}
          <div className="flex flex-col gap-2 ">
             <MagentaButton label='Apply Filters' buttonType='primary' disabled={false}
                            onClick={handleApplyFilters}/>
             <MagentaButton label='Clear Filters' buttonType='primary' disabled={false}
-                           onClick={() => setFilters(filtersInitialState)}/>
+                           onClick={clearFilters}/>
          </div>
       </div>
    );

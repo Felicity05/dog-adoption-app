@@ -27,7 +27,7 @@ export const LandingPage = () => {
             ).then(response => {
                const ids = response.resultIds;
                const totalItems = response.total;
-               console.log(response)
+               // console.log(response)
 
                getDogs(ids).then(r => {
                   setDogs(r);
