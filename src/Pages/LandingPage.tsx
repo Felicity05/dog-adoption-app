@@ -1,6 +1,5 @@
 import { getDogs, search } from "../api/api.tsx";
 import { useEffect, useState } from "react";
-import SearchBar from "../Components/SearchBar.tsx";
 import Card from "../Components/Card.tsx";
 import { Dog } from "../api/types.tsx";
 import Filters from "../Components/Filters.tsx";
