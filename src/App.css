@@ -1,6 +1,23 @@
 #root {
-  max-width: 1280px;
+  width: 100%;
+  min-height: 100vh; /* Ensure the root takes full viewport height */
   margin: 0 auto;
   padding: 1rem;
   text-align: left;
+}
+
+/* Center the content and constrain its width */
+.container {
+  width: 100%;
+  max-width: 1536px; /* Adjust this value as needed for 4K screens */
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+/* Ensure the main content area is centered and responsive */
+main {
+  width: 100%;
+  max-width: 1536px; /* Match the container width */
+  margin: 0 auto;
+  padding: 1rem;
 }

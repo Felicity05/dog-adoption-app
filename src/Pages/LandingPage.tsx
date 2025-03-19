@@ -1,72 +1,105 @@
-import {search, getDogs} from "../api/api.tsx";
-import {SetStateAction, useEffect, useState} from "react";
-import MagentaButton from "../Components/MagentaButton.tsx";
+import { getDogs, search } from "../api/api.tsx";
+import { useEffect, useState } from "react";
 import SearchBar from "../Components/SearchBar.tsx";
 import Card from "../Components/Card.tsx";
-import {Dog, FilterOptions} from "../api/types.tsx";
+import { Dog } from "../api/types.tsx";
 import Filters from "../Components/Filters.tsx";
 import Pagination from "../Components/Pagination.tsx";
+import { useFiltersStore } from "../store/filtersStore.tsx";
+import NoSearchMatch from "../Components/NoSearchMatch.tsx";
+import Loading from "../Components/Loading.tsx";
+import Match from "../Components/Match.tsx";
 
 
 export const LandingPage = () => {
    const [dogs, setDogs] = useState<Dog[]>([]);
    const [currentPage, setCurrentPage] = useState<number>(0);
    const [totalItems, setTotalItems] = useState<number>(0);
+   const { filters } = useFiltersStore();
+   const [loading, setLoading] = useState(true);
 
-   const currentPageHandler = (selectedPage: SetStateAction<number>) => {
-      console.log("selected page: ", selectedPage);
-      const page = typeof selectedPage === 'number' ? selectedPage : currentPage;
-      if (page >= 0 && page <= totalItems / 25 && page !== currentPage) {
+   useEffect(() => {
+      // console.log("current page: ", currentPage)
+      const fetchDogs = async () => {
+         try {
+            const response = await search({ ...filters, from: currentPage * 25 });
+            const ids = response.resultIds;
+            const totalItems = response.total;
+
+            if (ids.length > 0) {
+               const dogsData = await getDogs(ids);
+               setDogs(dogsData);
+            } else {
+               setDogs([]);
+            }
+            setTotalItems(totalItems);
+            setLoading(false);
+         } catch (error) {
+            console.error("Error fetching dogs:", error);
+         }
+      };
+
+      fetchDogs();
+   }, [filters, currentPage])
+
+   //Handle page change
+   const currentPageHandler = (selectedPage: number) => {
+      // console.log("selected page: ", selectedPage);
+      if (selectedPage >= 0 && selectedPage <= totalItems / 25 && selectedPage !== currentPage) {
          setCurrentPage(selectedPage)
       }
    }
 
-    useEffect(() => {
-       console.log("current page: ", currentPage)
-        search({sortCriteria: "breed", sortOrder: "asc", from: currentPage * 25} as FilterOptions
-            ).then(response => {
-               const ids = response.resultIds;
-               const totalItems = response.total;
-               // console.log(response)
+   return (
+      <div className="flex flex-col justify-center items-center w-full p-4">
+         {/* Header Section */}
+         <div className="flex flex-col gap-2 justify-center items-center text-[#090325] my-3 text-center">
+            <h1 className="font-bold font-['Laurens'] text-3xl md:text-5xl">
+               Find Your Newest Friend!
+            </h1>
+            <h2 className="text-lg md:text-2xl">
+               Save your favorites and meet your perfect match!
+            </h2>
+         </div>
 
-               getDogs(ids).then(r => {
-                  setDogs(r);
-                  setTotalItems(totalItems);
-                  // console.log(r)
-               }
-            ).catch(e => console.log(e))
-        });
-    }, [currentPage])
+         {/* Search and Match Section */}
+         <div className="flex flex-col md:flex-row gap-4 justify-center items-center w-full max-w-7xl">
+            {/* <SearchBar onSearch={() => { }} /> */}
+            <Match />
+         </div>
 
-    return(
-        <div className="flex flex-col justify-center items-center w-full">
-            <div className="flex flex-col gap-2 justify-center items-center text-[#090325] my-3">
-                <h1 className="font-bold font-['Laurens']">Find Your Newest Friend!</h1>
-                <h2>Save your favorites and meet your perfect match!</h2>
+         {/* Filters and Dogs Section */}
+         <div className="flex flex-col md:flex-row gap-4 mt-5 justify-center items-start w-full max-w-7xl">
+           
+            {/* Filters */}
+            <div className="w-full md:w-1/4">
+               <Filters />
             </div>
-            <div className="flex columns-3 gap-2 justify-center items-center">
-               <SearchBar onSearch={() =>{} }/>
-               <MagentaButton label='Match Me!' buttonType='primary' disabled={false}
-                           key='1'
-                           onClick={()=> console.log('clicked')} />
+
+            {/* Dogs Collection and Pagination */}
+            <div className="w-full">
+               {loading ? (
+                  <Loading />
+               ) : dogs.length > 0 ? (
+                  <div className="flex flex-col gap-2 justify-center items-center w-full">
+                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        {dogs.map((dog) => (
+                           <Card key={dog.id} dog={dog} />
+                        ))}
+                     </div>
+                     {totalItems > 25 && (
+                        <Pagination
+                           currentPage={currentPage}
+                           totalItems={totalItems}
+                           onPageChange={currentPageHandler}
+                        />
+                     )}
+                  </div>
+               ) : (
+                  <NoSearchMatch />
+               )}
             </div>
-           <div className="flex gap-2 justify-center items-start">
-              <Filters onFilterChange={() => {}} />
-              {/*dogs collection and pagination*/}
-              <div className="flex flex-col gap-2 justify-center items-center">
-                 <div className="flex flex-wrap justify-evenly items-center gap-3 mb-10 ">
-                    {dogs.map(dog => <Card key={dog.id}
-                       picture={dog.img}
-                       name={dog.name}
-                       age={dog.age}
-                       breed={dog.breed}
-                       location={dog.zip_code}
-                    />)}
-                 </div>
-                  <Pagination currentPage={currentPage} totalItems={totalItems}
-                              onPageChange={currentPageHandler}/>
-              </div>
-           </div>
-        </div>
-    )
+         </div>
+      </div>
+   )
 }

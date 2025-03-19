@@ -1,5 +1,5 @@
 ﻿import axios from "axios";
-import {FilterOptions, SearchResults, User} from "./types.tsx";
+import {FilterOptions, SearchLocation, SearchResults, User} from "./types.tsx";
 
 const BASE_URL = "https://frontend-take-home-service.fetch.com";
 
@@ -18,6 +18,11 @@ export const authenticate = async (user: User) => {
 
     return response;
 };
+
+export const logOut = async () => {
+    const response = await dogs_api.post("/auth/logout");
+    return response;
+}
 
 //returns an object containing an array of ids to be used with the dogs endpoint
 export const search = async ({breeds, name, zipCodes, minAge, maxAge,
@@ -53,6 +58,28 @@ export const getDogsBreeds = async () => {
     return response.data;
 }
 
+//returns an array of location objects and accepts a list of max 100 zip codes
+export const getLocationsFromZipCode = async (zipCodes: string[]) => {
+    console.log(zipCodes);
+    const response = await dogs_api.post("/locations", zipCodes);
+    return response.data;
+}
 
-//after log in make request to search then to post dogs with the ids to show 25 dogs
-//subsequents requets perfomed by the user
+
+export const searchLocations = async (searchLocation : SearchLocation) => {
+    const city = searchLocation.city ? searchLocation.city : null;
+    const states = (searchLocation.states !== undefined && searchLocation.states.length > 0)
+                                        ? searchLocation.states : null;
+
+    console.log("city=", city, "-states=", states);
+    const response = await dogs_api.post("/locations/search", {
+            city,
+            states
+    });
+    return response.data;
+}
+
+export const matchMe = async (dogsIds: string[]) => {
+    const response = await dogs_api.post("/dogs/match", dogsIds);
+    return response.data;
+}

@@ -1,19 +1,20 @@
-import { FilterOptions } from "../api/types.tsx";
-import React, { ChangeEvent, RefObject, useEffect, useRef, useState } from "react";
+import React, {ChangeEvent, useEffect, useRef, useState} from "react";
+import {useFiltersStore} from "../store/filtersStore.tsx";
 
 interface MultiSelectProps {
-   filters: FilterOptions;
-   onFilterChange: (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
-   breeds: string[];
-   optionsListRef: RefObject<HTMLUListElement | null>;
+   displayText: string,
+   dropdownFor: string,
+   optionsList: string[],
+   filtersProperty?: string[] | undefined
 }
 
-const MultiSelectDropdown: React.FC<MultiSelectProps> = ({ filters, onFilterChange, breeds, optionsListRef }) => {
+const MultiSelectDropdown: React.FC<MultiSelectProps> = ({dropdownFor, filtersProperty, displayText, optionsList}
+) => {
+   const {filters, setFilters} = useFiltersStore();
    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
    const dropdownRef = useRef<HTMLDivElement>(null);
    const buttonRef = useRef<HTMLDivElement>(null);
-   const selectedCount = filters.breeds?.length || 0;
-   const displayText = selectedCount > 0 ? `${selectedCount} breeds selected` : "Select breeds";
+   const optionsListRef = useRef<HTMLUListElement>(null);
 
    // Close dropdown when clicking outside
    useEffect(() => {
@@ -34,12 +35,22 @@ const MultiSelectDropdown: React.FC<MultiSelectProps> = ({ filters, onFilterChan
       };
    }, []);
 
+   const handleSelectionChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+      const isChecked = (event.target as HTMLInputElement).checked;
+      const option = event.target.value;
+      const selectedOptionSet = new Set(filtersProperty);
+
+      if (isChecked) {
+         selectedOptionSet.add(option);
+      } else {
+         selectedOptionSet.delete(option);
+      }
+      const selectedOptions = Array.from(selectedOptionSet);
+      setFilters({...filters, [dropdownFor]: selectedOptions});
+   }
+
    return (
       <div className="w-full">
-         <label className="block w-full pl-2 mb-2 text-lg font-medium text-gray-700" htmlFor="breeds">
-            Breeds
-         </label>
-
          <div ref={buttonRef} className="relative">
             <div
                onClick={() => setIsDropdownOpen((prev) => !prev)}
@@ -59,8 +70,8 @@ const MultiSelectDropdown: React.FC<MultiSelectProps> = ({ filters, onFilterChan
                           h-[350px] overflow-y-scroll shadow-lg"
                >
                   <ul ref={optionsListRef}>
-                     {breeds.map((breed) => (
-                        <li key={breed}>
+                     {optionsList.map((option) => (
+                        <li key={option}>
                            <label
                               className="flex whitespace-nowrap cursor-pointer px-2 py-1 rounded transition-colors
                                        hover:bg-[rgba(137,10,116,0.54)]
@@ -70,14 +81,14 @@ const MultiSelectDropdown: React.FC<MultiSelectProps> = ({ filters, onFilterChan
                            >
                               <input
                                  type="checkbox"
-                                 name="breeds"
-                                 value={breed}
-                                 checked={filters.breeds?.includes(breed)}
+                                 name={dropdownFor}
+                                 value={option}
+                                 checked={filtersProperty!.includes(option)}
                                  className="cursor-pointer appearance-none border-2 rounded border-[#890A74]
                                     checked:bg-[#ffa900]"
-                                 onChange={onFilterChange}
+                                 onChange={handleSelectionChange}
                               />
-                              <span className="ml-2 w-full">{breed}</span>
+                              <span className="ml-2 w-full">{option}</span>
                            </label>
                         </li>
                      ))}

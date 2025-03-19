@@ -7,7 +7,7 @@ interface Dog {
     breed: string;
 }
 
-interface Location {
+interface LocationObject {
     zip_code: string;
     latitude: number;
     longitude: number;
@@ -41,14 +41,30 @@ export enum SortCriteria {
 
 interface FilterOptions {
     breeds?: string[];
+    zipCodes?: string[];
     name?: string;
+    location?: string,
     minAge?: number | null;
     maxAge?: number | null;
-    sortOrder: "asc" | "desc";
-    sortCriteria: SortCriteria;
     size?: number;
     from?: number;
-    zipCodes?: string[];
+    sortOrder: "asc" | "desc";
+    sortCriteria: SortCriteria;
 }
 
-export type { Dog, Location, Coordinates, SearchResults, User, FilterOptions };
+interface SearchLocation {
+    city?: string,
+    states?: string[],
+    geoBoundingBox?: {
+        top?: number,
+        left?: number,
+        bottom?: number,
+        right?: number,
+        bottom_left?: Coordinates,
+        top_left?: Coordinates
+    },
+    size?: number,
+    from?: number
+}
+
+export type { Dog, LocationObject, Coordinates, SearchResults, User, FilterOptions, SearchLocation };
