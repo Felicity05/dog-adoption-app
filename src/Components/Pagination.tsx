@@ -32,7 +32,7 @@ const Pagination: React.FC<PaginationProps> = ({currentPage, totalItems, onPageC
       let endPage = 5;
 
       // Adjust which pages to display dynamically
-      if (currentPage >= 3) {
+      if (currentPage >= 3 && totalPages > 5) {
          startPage = currentPage - 2;
          endPage = currentPage + 2;
       }
@@ -43,7 +43,8 @@ const Pagination: React.FC<PaginationProps> = ({currentPage, totalItems, onPageC
          startPage = Math.max(0, totalPages - 5);
       }
 
-      if(currentPage >= 3) {
+      console.log(currentPage," - ", totalPages)
+      if(currentPage >= 3 && totalPages > 5) {
          pages.push(
             <button className={`px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-[rgba(137,10,116,0.45)]
                      hover:text-[rgba(255,169,25)] hover:cursor-pointer
