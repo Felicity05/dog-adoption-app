@@ -7,7 +7,7 @@ const AgeFilters: React.FC = () => {
    const handleAgeInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       const {name, value} = e.target;
       const newValue = name === "minAge" || name === "maxAge" ? (value ? +value : null) : value;
-      setFilters({...filters, [name]: newValue});
+      setFilters({ ...filters, [name]: newValue, currentPage: 0 });
    }
 
   return (

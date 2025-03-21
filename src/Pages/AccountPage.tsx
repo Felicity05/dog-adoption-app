@@ -9,7 +9,7 @@ import Match from "../Components/Match";
 const AccountPage: React.FC = () => {
     const navigate = useNavigate();
     const { favorites } = favoritesStore(); // Fetch favorited dogs
-    const user = localStorage.getItem("user"); // Example: Replace with real user data
+    const user = localStorage.getItem("user"); 
     const [favoritesDogs, setFavoritesDogs] = useState<Dog[]>([]);
 
     useEffect(() => {

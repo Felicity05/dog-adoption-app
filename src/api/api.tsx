@@ -1,7 +1,8 @@
 ﻿import axios from "axios";
-import {FilterOptions, SearchLocation, SearchResults, User} from "./types.tsx";
+import { FilterOptions, SearchLocation, SearchResults, User } from "./types.tsx";
 
 const BASE_URL = "https://frontend-take-home-service.fetch.com";
+export const ITEMS_PER_REQUEST = 27;
 
 const dogs_api = axios.create({
     baseURL: BASE_URL,
@@ -25,10 +26,12 @@ export const logOut = async () => {
 }
 
 //returns an object containing an array of ids to be used with the dogs endpoint
-export const search = async ({breeds, name, zipCodes, minAge, maxAge,
-                                 size, from, sortCriteria, sortOrder}: FilterOptions): Promise<SearchResults> => {
+export const search = async ({ breeds, name, zipCodes, minAge, maxAge, currentPage, 
+                                sortCriteria, sortOrder }: FilterOptions): Promise<SearchResults> => {
 
     const sort = `${sortCriteria}:${sortOrder}`;
+    const page = currentPage * ITEMS_PER_REQUEST;
+    // console.log(page)
 
     const response = await dogs_api.get("/dogs/search", {
         params: {
@@ -37,8 +40,8 @@ export const search = async ({breeds, name, zipCodes, minAge, maxAge,
             zipCodes,
             ageMin: minAge,
             ageMax: maxAge,
-            size,
-            from,
+            size: ITEMS_PER_REQUEST,
+            from: page,
             sort,
         },
     });
@@ -66,15 +69,15 @@ export const getLocationsFromZipCode = async (zipCodes: string[]) => {
 }
 
 
-export const searchLocations = async (searchLocation : SearchLocation) => {
+export const searchLocations = async (searchLocation: SearchLocation) => {
     const city = searchLocation.city ? searchLocation.city : null;
     const states = (searchLocation.states !== undefined && searchLocation.states.length > 0)
-                                        ? searchLocation.states : null;
+        ? searchLocation.states : null;
 
     console.log("city=", city, "-states=", states);
     const response = await dogs_api.post("/locations/search", {
-            city,
-            states
+        city,
+        states
     });
     return response.data;
 }

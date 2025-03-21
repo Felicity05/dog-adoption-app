@@ -18,12 +18,13 @@ export const useFiltersStore = create<FiltersState>((set) => ({
       location: "",
       sortOrder: "asc",
       sortCriteria: SortCriteria.Breed,
+      currentPage: 0
    },
    isMultiple: false,
    setIsMultiple: (isMultiple: boolean) => { set({isMultiple}) },
    setFilters: (newFilters) =>
       set((state) => ({
-         filters: { ...state.filters, ...newFilters },
+         filters: { ...state.filters, ...newFilters},
       })),
    resetFilters: () =>
       set({
@@ -35,6 +36,7 @@ export const useFiltersStore = create<FiltersState>((set) => ({
             location: "",
             sortOrder: "asc",
             sortCriteria: SortCriteria.Breed,
+            currentPage: 0
          },
          isMultiple: false,
       }),

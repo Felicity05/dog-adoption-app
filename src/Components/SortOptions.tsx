@@ -10,7 +10,7 @@ const SortOptions = () => {
       e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
    ) => {
       const {name, value} = e.target;
-      setFilters({...filters, [name]: value });
+      setFilters({ ...filters, [name]: value, currentPage: 0 });
    };
 
 

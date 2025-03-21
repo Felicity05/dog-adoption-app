@@ -50,6 +50,7 @@ interface FilterOptions {
     from?: number;
     sortOrder: "asc" | "desc";
     sortCriteria: SortCriteria;
+    currentPage: number; 
 }
 
 interface SearchLocation {

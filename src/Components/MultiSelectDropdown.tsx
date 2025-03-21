@@ -46,7 +46,7 @@ const MultiSelectDropdown: React.FC<MultiSelectProps> = ({dropdownFor, filtersPr
          selectedOptionSet.delete(option);
       }
       const selectedOptions = Array.from(selectedOptionSet);
-      setFilters({...filters, [dropdownFor]: selectedOptions});
+      setFilters({...filters, [dropdownFor]: selectedOptions, currentPage: 0});
    }
 
    return (
