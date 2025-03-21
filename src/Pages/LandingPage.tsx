@@ -8,6 +8,8 @@ import { useFiltersStore } from "../store/filtersStore.tsx";
 import NoSearchMatch from "../Components/NoSearchMatch.tsx";
 import Loading from "../Components/Loading.tsx";
 import Match from "../Components/Match.tsx";
+import MagentaButton from "../Components/MagentaButton.tsx";
+import { useNavigate } from "react-router-dom";
 
 
 export const LandingPage = () => {
@@ -16,6 +18,7 @@ export const LandingPage = () => {
    const [totalItems, setTotalItems] = useState<number>(0);
    const { filters } = useFiltersStore();
    const [loading, setLoading] = useState(true);
+   const navigate = useNavigate();
 
    useEffect(() => {
       // console.log("current page: ", currentPage)
@@ -62,16 +65,16 @@ export const LandingPage = () => {
          </div>
 
          {/* Search and Match Section */}
-         <div className="flex flex-col md:flex-row gap-4 justify-center items-center w-full max-w-7xl">
+         <div className="flex flex-col md:flex-row gap-4 p-4 justify-center items-center w-full max-w-7xl">
             {/* <SearchBar onSearch={() => { }} /> */}
-            <Match />
+            <MagentaButton label={"View Favorites"} onClick={() => navigate("/account") }  />
          </div>
 
          {/* Filters and Dogs Section */}
          <div className="flex flex-col md:flex-row gap-4 mt-5 justify-center items-start w-full max-w-7xl">
            
             {/* Filters */}
-            <div className="w-full md:w-1/4">
+            <div className="w-full md:w-1/3">
                <Filters />
             </div>
 
@@ -81,7 +84,7 @@ export const LandingPage = () => {
                   <Loading />
                ) : dogs.length > 0 ? (
                   <div className="flex flex-col gap-2 justify-center items-center w-full">
-                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {dogs.map((dog) => (
                            <Card key={dog.id} dog={dog} />
                         ))}

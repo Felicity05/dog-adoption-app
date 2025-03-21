@@ -13,7 +13,7 @@ const Navbar: React.FC = () => {
     const handleLogout = async () => {
         const response = await logOut();
         console.log(response);
-        // localStorage.removeItem("user"); // Example: Adjust this to match your app's auth system
+        localStorage.removeItem("user"); // Example: Adjust this to match your app's auth system
         navigate("/");
     };
 
@@ -26,7 +26,7 @@ const Navbar: React.FC = () => {
 
                     {/* App Logo/Name */}
                     <div className="flex items-center">
-                        <a href="/" className="text-5xl font-bold font-['Laurens'] text-[#890A74]
+                        <a href="/" className="text-4xl md:text-5xl font-bold font-['Laurens'] text-[#890A74]
                         hover:text-[#FFA900]">
                             Dinger
                         </a>
@@ -34,7 +34,7 @@ const Navbar: React.FC = () => {
 
                     {/* User Icons */}
                     { location.pathname !== "/" && (
-                        <div className="flex items-center space-x-4">
+                        <div className="flex items-center space-x-2">
                             {/* User Account Icon */}
                             <button
                                 onClick={() => navigate("/account")}

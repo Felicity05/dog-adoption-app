@@ -1,13 +1,32 @@
 .ajax-loader {
     position: absolute;
-    top: 55%;
-    left: 62%;
+    top: 25%;
     transform-origin: 50% 50%;
     transform: rotate(90deg) translate(-50%, 0%);
-    font-size: 50px;
+    font-size: 30px;
     width: 1em;
     height: 3em;
     color: #654321;
+
+    /* Default left position for medium and smaller screens */
+    left: 68%;
+
+    /* Adjust left position for large screens */
+    @media (min-width: 768px) {
+        left: 59%;
+        font-size: 45px;
+    }
+
+    /* Adjust left position for large screens */
+    @media (min-width: 1024px) {
+        left: 59%;
+        font-size: 65px;
+    }
+
+    @media (min-width: 1440px) {
+        left: 53%;
+        font-size: 75px;
+    }
 
     .paw {
         width: 1em;

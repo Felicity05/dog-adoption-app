@@ -25,13 +25,14 @@ const Card: React.FC<CardProps> = ({ dog }) => {
 
         
          {/* Dog Image */}
-         <div className="w-full h-48 overflow-hidden">
+         <div className="flex w-full h-48 overflow-hidden">
             <img
                className="w-full h-full object-cover"
                src={dog.img}
                alt={`${dog.name}'s picture`}
             />
          </div>
+
 
          {/* Dog Details */}
          <div className="px-6 py-4">

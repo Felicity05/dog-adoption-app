@@ -10,7 +10,7 @@ const Filters: React.FC = () => {
    const { resetFilters } = useFiltersStore();
 
    return (
-      <div className="p-5 bg-white rounded shadow-md space-y-4 w-full lg:max-w-[300px] boder-5">
+      <div className="p-5 bg-white rounded shadow-md space-y-4 w-full boder-5">
          {/* Title */}
          <h2 className="text-xl font-bold text-center">Refine Your Search</h2>
        

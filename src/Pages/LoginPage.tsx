@@ -18,6 +18,7 @@ export const LoginPage = () => {
     const handleLogIn = async () => {
         const isSuccessful = await authenticate(user);
         redirectAfterLogin(!!isSuccessful);
+        localStorage.setItem("user", user.name)
     }
 
     return (
