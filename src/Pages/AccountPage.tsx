@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { favoritesStore } from "../store/favoritesStore";
-import MagentaButton from "../Components/MagentaButton";
 import { Dog } from "../api/types";
 import { getDogs } from "../api/api";
 import Match from "../Components/Match";
+import { Trash2Icon } from "lucide-react";
+
 
 const AccountPage: React.FC = () => {
-    const navigate = useNavigate();
-    const { favorites } = favoritesStore(); // Fetch favorited dogs
+    const { favorites, clearFavorites } = favoritesStore(); // Fetch favorited dogs
     const user = localStorage.getItem("user"); 
     const [favoritesDogs, setFavoritesDogs] = useState<Dog[]>([]);
 
+    //Persist favorites after login
+
     useEffect(() => {
         const getFavorites = async () => {
+            console.log(favorites.length)
             const dogsData = await getDogs(favorites);
             setFavoritesDogs(dogsData);
             console.log(dogsData)
@@ -22,22 +24,31 @@ const AccountPage: React.FC = () => {
         getFavorites();
     }, [])
 
+    const handleCleanFavorites = () => {
+        clearFavorites();
+        setFavoritesDogs([]);
+    }
+
     return (
         <div className="w-full max-w-6xl mx-auto">
             {/* User Info */}
             <div className="w-full p-6 rounded-lg">
-                <h2 className="text-xl font-bold text-[#890A74]">User Account</h2>
+                <h2 className="text-2xl font-bold text-[#890A74]">User Account</h2>
                 <p className="my-5 text-2xl text-gray-600">Hello, <strong>{user || "Guest"}</strong>!</p>
-                <MagentaButton label={"Continue searching"} onClick={() => navigate("/dinger")} />
             </div>
 
-           
 
             {/* Favorite Dogs */}
             <div className="w-full mt-6 p-6 rounded-lg
                             isolate aspect-video bg-white/20 shadow-lg ring-1 ring-gray-700/20 backdrop-blur-lg">
                 
-                <h2 className="text-2xl font-bold text-[#890A74]">Your Favorite Dogs</h2>
+                <div className="flex gap-4">
+                <h2 className="text-3xl font-bold text-[#890A74]">Your Favorite Dogs</h2>
+                    <button onClick={handleCleanFavorites} className="text-[#890A74] hover:text-[#FFA900] transition-colors">
+                        <Trash2Icon size={28} className={`${favoritesDogs.length > 0 ? "fill-[#ffa900] hover:fill-none" : ""}`} />
+                </button>
+                </div>
+
                 {/* Match Me Button */}
                 <Match />
 

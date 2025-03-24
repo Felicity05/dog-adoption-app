@@ -16,7 +16,7 @@ function App() {
                         <LoginPage />
                     </Layout>
                 } />
-                <Route path="/dinger" element={
+                <Route path="/search" element={
                     <Layout>
                         <LandingPage />
                     </Layout>

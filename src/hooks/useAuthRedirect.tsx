@@ -5,7 +5,7 @@ export const useAuthRedirect = () => {
 
     const redirectAfterLogin = (isSuccessful: boolean) => {
         if (isSuccessful) {
-            navigate("/dinger");
+            navigate("/search");
         } else {
             // Optional: Handle login failure
             navigate("/");

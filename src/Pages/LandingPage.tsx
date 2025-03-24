@@ -55,22 +55,21 @@ export const LandingPage = () => {
             <h1 className="font-bold font-['Laurens'] text-3xl md:text-5xl">
                Find Your Newest Friend!
             </h1>
-            <h2 className="text-lg md:text-2xl">
+            <h2 className="text-lg md:text-2xl pb-7">
                Save your favorites and meet your perfect match!
             </h2>
          </div>
 
-         {/* Search and Match Section */}
+         {/* Search and Match Section
          <div className="flex flex-col md:flex-row gap-4 p-4 justify-center items-center w-full max-w-7xl">
-            {/* <SearchBar onSearch={() => { }} /> */}
-            <MagentaButton label={"View Favorites"} onClick={() => navigate("/account")} />
-         </div>
+            <SearchBar onSearch={() => { }} /> 
+         </div> */}
 
          {/* Filters and Dogs Section */}
          <div className="flex flex-col md:flex-row gap-4 mt-5 justify-center items-start w-full max-w-7xl">
 
             {/* Filters */}
-            <div className="w-full md:w-1/3">
+            <div className="w-full md:w-1/3 sticky top-17 z-30">
                <Filters />
             </div>
 

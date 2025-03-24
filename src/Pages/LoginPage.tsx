@@ -4,6 +4,7 @@ import { User } from "../api/types.tsx";
 import { useAuthRedirect } from "../hooks/useAuthRedirect.tsx";
 import adoptMeImg from '../assets/adopt-me.png';
 import MagentaButton from "../Components/MagentaButton.tsx";
+import { favoritesStore } from "../store/favoritesStore.tsx";
 
 
 const initialUser: User = {
@@ -19,6 +20,7 @@ export const LoginPage = () => {
         const isSuccessful = await authenticate(user);
         redirectAfterLogin(!!isSuccessful);
         localStorage.setItem("user", user.name)
+        favoritesStore.getState().initialize(user.email);
     }
 
     return (

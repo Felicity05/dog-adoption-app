@@ -1,13 +1,14 @@
-import { LogOut, User } from 'lucide-react';
-import React from 'react';
+import { HeartIcon, LogOut, User } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { logOut } from '../api/api';
+import { favoritesStore } from '../store/favoritesStore';
 
 const Navbar: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    console.log(location.pathname)
-
+    const {favoritesCount} = favoritesStore();
+    const [isAtTop, setIsAtTop] = useState(true);
 
     // Handle logout: clear user session and redirect to login page
     const handleLogout = async () => {
@@ -17,24 +18,48 @@ const Navbar: React.FC = () => {
         navigate("/");
     };
 
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsAtTop(window.scrollY === 0);
+        };
 
+        window.addEventListener('scroll', handleScroll);
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    
     return (
-        <nav className="text-[#090325] mt-5 w-full mx-auto">
-            <div className="px-3">
+        <nav className={`w-full mx-auto sticky top-0 z-50 transition-all duration-300
+                     ${isAtTop ? '' : 'bg-[rgba(54,65,83,0.4)] shadow-lg backdrop-blur-lg rounded-lg'
+            }`}>
+            <div className="px-3 lg:px-5">
 
                 <div className="flex justify-between h-16 items-center">
 
                     {/* App Logo/Name */}
                     <div className="flex items-center">
-                        <a href="/" className="text-4xl md:text-5xl font-bold font-['Laurens'] text-[#890A74]
-                        hover:text-[#FFA900]">
+                        <p onClick={() => navigate("/search")}
+                         className="text-4xl pt-1 md:text-5xl font-bold font-['Laurens'] text-[#890A74]
+                                    cursor-pointer hover:text-[#FFA900]">
                             Dinger
-                        </a>
+                        </p>
                     </div>
 
                     {/* User Icons */}
                     { location.pathname !== "/" && (
                         <div className="flex items-center space-x-2">
+                            {/* User Favorites Icon */}
+                            <button
+                                onClick={() => navigate("/account")}
+                                className="text-[#890A74] hover:text-[#FFA900] transition-colors relative"
+                            >
+                                <HeartIcon size={28} className="hover:fill-[#FFA900]" />
+                                {favoritesCount > 0 && (
+                                    <span className="absolute -top-2 -right-2 bg-[#FFA900] text-[#890A74] text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                                        {favoritesCount}
+                                    </span>
+                                )}
+                            </button>
                             {/* User Account Icon */}
                             <button
                                 onClick={() => navigate("/account")}
@@ -52,46 +77,6 @@ const Navbar: React.FC = () => {
                             </button>
                         </div>
                     )}
-
-                    {/* <div className="hidden md:flex space-x-4">
-                        <a
-                            href=""
-                            className="px-3 py-2 text-md font-medium
-                            hover:underline hover:decoration-2 hover:underline-offset-4
-                            hover:decoration-[#890A74]"
-                        >
-                            About Us
-                        </a>
-                        <a
-                           href="/contact"
-                        className="px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-700"
-                        >
-                        Contact
-                        </a>
-                    </div> */}
-
-                    {/* <div className="md:hidden">
-                        <button
-                            type="button"
-                            className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700"
-                        >
-                            <svg
-                                className="h-6 w-6"
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                                aria-hidden="true"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M4 6h16M4 12h16m-7 6h7"
-                                />
-                            </svg>
-                        </button>
-                    </div> */}
                 </div>
             </div>
         </nav>
@@ -99,3 +84,4 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
+

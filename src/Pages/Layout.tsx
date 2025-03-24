@@ -9,8 +9,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
     return (
         <div className="min-h-screen flex flex-col">
             {/* Navbar */}
-            <div className="w-full flex justify-center p-4">
-                <div className="container">
+            <div className="w-full flex justify-center my-7 sticky top-0 z-50">
+                <div className="w-full max-w-7xl">
                     <Navbar />
                 </div>
             </div>
