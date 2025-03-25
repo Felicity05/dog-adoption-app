@@ -1,4 +1,4 @@
-import { getDogs, getLocationsFromZipCode, ITEMS_PER_REQUEST, search } from "../api/api.tsx";
+import { fetchDogsInBatches, getDogs, getLocationsFromZipCode, ITEMS_PER_REQUEST, search } from "../api/api.tsx";
 import { useEffect, useState } from "react";
 import Card from "../Components/Card.tsx";
 import { Dog, LocationObject } from "../api/types.tsx";
@@ -24,14 +24,16 @@ export const DogSearchPage = () => {
             const response = await search({ ...filters });
             const ids = response.resultIds;
 
-            let totalItems 
-            if(filters.zipCodes!.length > 0)
-               totalItems = searchLocationTotalItems; 
-            else 
-               totalItems = response.total;
+            // let totalItems 
+            // if(filters.zipCodes!.length > 0)
+            //    totalItems = searchLocationTotalItems; 
+            // else 
+            const   totalItems = response.total;
+            console.log("total items", totalItems)
 
             if (ids.length > 0) {
                const dogsData = await getDogs(ids);
+               console.log("ids passing to function=", ids.length)
                const zips = dogsData.map((dog: Dog) => dog.zip_code);
                const locs = await getLocationsFromZipCode(zips)
 
@@ -59,8 +61,8 @@ export const DogSearchPage = () => {
    //Handle page change
    const currentPageHandler = (selectedPage: number) => {
       if (selectedPage >= 0 && selectedPage <= totalItems / ITEMS_PER_REQUEST) {
-         if(filters.zipCodes!.length > 0) setSearchLocationPage(selectedPage)
-         else 
+         // if(filters.zipCodes!.length > 0) setSearchLocationPage(selectedPage)
+         // else 
             setFilters({ ...filters, currentPage: selectedPage })
       }
    }

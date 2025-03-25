@@ -42,7 +42,6 @@ const LocationSearch: React.FC = () => {
             .filter((loc) => loc && isNaN(Number(loc))); // Remove numeric values (keep cities/states)
 
          if (zipcodes.length > 0) {
-            console.log("this should not run when citi is entered ")
             await validateZipCodes(zipcodes);
          } else if (citiesOrStates.length > 0) {
             await getZipsFromCityOrStates(citiesOrStates, page);
