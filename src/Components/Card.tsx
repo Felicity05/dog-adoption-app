@@ -1,13 +1,14 @@
 import React from 'react';
 import { favoritesStore } from '../store/favoritesStore';
 import { HeartIcon } from "lucide-react";
-import { Dog } from '../api/types';
+import { Dog, LocationObject } from '../api/types';
 
 interface CardProps {
    dog: Dog;
+   location: LocationObject | undefined;
 }
 
-const Card: React.FC<CardProps> = ({ dog }) => {
+const Card: React.FC<CardProps> = ({ dog, location }) => {
    const { toggleFavorite, isFavorited } = favoritesStore();
    const favorited = isFavorited(dog.id);
 
@@ -44,7 +45,8 @@ const Card: React.FC<CardProps> = ({ dog }) => {
                <strong>Breed:</strong> {dog.breed}
             </p>
             <p className="text-gray-700 text-base">
-               <strong>Location:</strong> {dog.zip_code}
+               <strong>Location:</strong> {location ? `${location.city}, ${location.state} ${location.zip_code}` 
+                           : `${dog.zip_code}`}
             </p>
          </div>
       </div>

@@ -79,7 +79,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalItems, onPage
             for (let i = startPage; i <= endPage; i++) {
                pages.push(
                   <button
-                     key={i}
+                     key={`l-${i}`}
                      className={`px-3 py-1 rounded ${currentPage === i ? 'bg-[#890A74] text-[#FFA900] font-medium' : 'bg-gray-200 text-gray-700'
                         } hover:bg-[rgba(137,10,116,0.45)] hover:text-[rgba(255,169,25)] hover:cursor-pointer`}
                      onClick={() => handlePageClick(i)}
@@ -97,17 +97,18 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalItems, onPage
             endPage = currentPage + 2;
          }
 
-
          // Ensure the endPage doesn't exceed the total number of pages
          if (endPage > totalPages) {
             endPage = totalPages;
             startPage = Math.max(0, totalPages - 5);
          }
-
+         
          //only show 1 and ellipsis if there are more than 6 pages
          if (currentPage >= 3 && totalPages > 5) {
             pages.push(
-               <button className={`px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-[rgba(137,10,116,0.45)]
+               <button 
+                  key="1"
+                  className={`px-3 py-1 rounded bg-gray-200 text-gray-700 hover:bg-[rgba(137,10,116,0.45)]
                         hover:text-[rgba(255,169,25)] hover:cursor-pointer
                         ${currentPage === 0 && 'opacity-50 cursor-not-allowed'
                   }`}
@@ -123,7 +124,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalItems, onPage
          for (let i = startPage; i <= endPage; i++) {
             pages.push(
                <button
-                  key={i}
+                  key={`r-${i}`}
                   className={`px-3 py-1 rounded ${currentPage === i ? 'bg-[#890A74] text-[#FFA900] font-medium' : 'bg-gray-200 text-gray-700'
                      } hover:bg-[rgba(137,10,116,0.45)] hover:text-[rgba(255,169,25)] hover:cursor-pointer`}
                   onClick={() => handlePageClick(i)}
@@ -157,6 +158,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalItems, onPage
       <div className="flex flex-col items-center justify-center space-x-2 my-4">
          <div className="flex items-center justify-center space-x-2 my-4">
             <button
+               key={"prev"}
                className={`px-3 py-1 rounded bg-gray-200 text-gray-600 enabled:hover:bg-[rgba(137,10,116,0.45)] 
                         enabled:hover:cursor-pointer enabled:hover:text-[rgba(255,169,25)]
                         ${currentPage === 0 && 'opacity-50 cursor-not-allowed hover:none'
@@ -168,6 +170,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalItems, onPage
             </button>
             {renderPageNumbers()}
             <button
+               key="next"
                className={`px-3 py-1 rounded bg-gray-200 text-gray-700 enabled:hover:bg-[rgba(137,10,116,0.45)] 
                         enable:hover:cursor-pointer enabled:hover:text-[rgba(255,169,25)]
                         ${currentPage === totalPages && 'opacity-50 cursor-not-allowed'

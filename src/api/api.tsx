@@ -31,7 +31,7 @@ export const search = async ({ breeds, name, zipCodes, minAge, maxAge, currentPa
 
     const sort = `${sortCriteria}:${sortOrder}`;
     const page = currentPage * ITEMS_PER_REQUEST;
-    // console.log(page)
+    console.log("current page for search data= ", currentPage)
 
     const response = await dogs_api.get("/dogs/search", {
         params: {
@@ -63,21 +63,25 @@ export const getDogsBreeds = async () => {
 
 //returns an array of location objects and accepts a list of max 100 zip codes
 export const getLocationsFromZipCode = async (zipCodes: string[]) => {
-    console.log(zipCodes);
+    // console.log(zipCodes);
     const response = await dogs_api.post("/locations", zipCodes);
     return response.data;
 }
 
 
-export const searchLocations = async (searchLocation: SearchLocation) => {
+export const searchLocations = async (searchLocation: SearchLocation, currentPage: number) => {
     const city = searchLocation.city ? searchLocation.city : null;
     const states = (searchLocation.states !== undefined && searchLocation.states.length > 0)
         ? searchLocation.states : null;
+    const page = currentPage * ITEMS_PER_REQUEST;    
+    console.log("currentPage for location data=",currentPage)
 
-    console.log("city=", city, "-states=", states);
+    // console.log("city=", city, "-states=", states);
     const response = await dogs_api.post("/locations/search", {
         city,
-        states
+        states,
+        size: ITEMS_PER_REQUEST,
+        from: page,
     });
     return response.data;
 }

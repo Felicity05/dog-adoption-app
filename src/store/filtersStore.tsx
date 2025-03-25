@@ -1,12 +1,14 @@
-import {create} from "zustand";
-import {FilterOptions, SortCriteria} from "../api/types.tsx";
+import { create } from "zustand";
+import { FilterOptions, SortCriteria } from "../api/types.tsx";
 
 interface FiltersState {
    filters: FilterOptions;
-   isMultiple: boolean;
-   setIsMultiple: (isMultiple: boolean) => void;
    setFilters: (filters: Partial<FiltersState["filters"]>) => void;
    resetFilters: () => void;
+   searchLocationCurrentPage: number;
+   searchLocationTotalItems: number;
+   setSearchLocationPage: (page: number) => void;
+   setSearchLocationTotalItems: (total: number) => void;
 }
 
 export const useFiltersStore = create<FiltersState>((set) => ({
@@ -20,11 +22,13 @@ export const useFiltersStore = create<FiltersState>((set) => ({
       sortCriteria: SortCriteria.Breed,
       currentPage: 0
    },
-   isMultiple: false,
-   setIsMultiple: (isMultiple: boolean) => { set({isMultiple}) },
+   searchLocationCurrentPage: 0,
+   searchLocationTotalItems: 0,
+   setSearchLocationPage: (page) => set({ searchLocationCurrentPage: page }),
+   setSearchLocationTotalItems: (total) => set({ searchLocationTotalItems: total }),
    setFilters: (newFilters) =>
       set((state) => ({
-         filters: { ...state.filters, ...newFilters},
+         filters: { ...state.filters, ...newFilters },
       })),
    resetFilters: () =>
       set({
@@ -38,6 +42,7 @@ export const useFiltersStore = create<FiltersState>((set) => ({
             sortCriteria: SortCriteria.Breed,
             currentPage: 0
          },
-         isMultiple: false,
+         searchLocationCurrentPage: 0,
+         searchLocationTotalItems: 0,
       }),
 }));
