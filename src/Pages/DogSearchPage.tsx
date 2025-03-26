@@ -7,22 +7,28 @@ import Pagination from "../Components/Pagination.tsx";
 import { useFiltersStore } from "../store/filtersStore.tsx";
 import NoSearchMatch from "../Components/NoSearchMatch.tsx";
 import Loading from "../Components/Loading.tsx";
+import { useDebounce } from "use-debounce";
 
 export const DogSearchPage = () => {
    const [dogs, setDogs] = useState<Dog[]>([]);
    const [totalItems, setTotalItems] = useState<number>(0);
-   const [loading, setLoading] = useState(true);
+   // const [loading, setLoading] = useState(true);
    const [locationMap, setLocationMap] = useState<Map<string, LocationObject>>(new Map());
-   const { filters, setFilters } = useFiltersStore();
+   const { filters, setFilters, isLoading, setLoading } = useFiltersStore();
 
    // TODO: enable a loading state for location search
+   const [debouncedFilters] = useDebounce(filters, 1000); // Debounce filters by 1 second
+
 
    useEffect(() => {
       const fetchDogs = async () => {
-         setLoading(true);
+         if (debouncedFilters.zipCodes && debouncedFilters.zipCodes.length === 0 && filters.location!.trim()) {
+            return; // Avoid fetching if filtering by location is still processing
+         }
+
+         setLoading(true); // Set loading to true when fetching starts
          try {
-            const response = await search({ ...filters });
-            
+            const response = await search({ ...debouncedFilters });
             const ids = response.resultIds.slice(0, ITEMS_PER_REQUEST); // Ensure only 27 items per page
             // console.log("resultsIds length", ids.length)
 
@@ -49,11 +55,11 @@ export const DogSearchPage = () => {
          } catch (error) {
             console.error("Error fetching dogs:", error);
          }
-         setLoading(false);
+         setLoading(false); // Set loading to false when fetching is complete
       };
 
       fetchDogs();
-   }, [filters])
+   }, [debouncedFilters])
 
    //Handle page change
    const currentPageHandler = (selectedPage: number) => {
@@ -84,7 +90,7 @@ export const DogSearchPage = () => {
 
             {/* Dogs Collection and Pagination */}
             <div className="w-full">
-               {loading ? (
+               {isLoading ? (
                   <Loading />
                ) : dogs.length > 0 ? (
                   <div className="flex flex-col gap-2 justify-center items-center w-full pb-15">

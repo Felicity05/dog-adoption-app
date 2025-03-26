@@ -5,7 +5,6 @@ import { useFiltersStore } from "../store/filtersStore.tsx";
 import { LocationObject } from "../api/types.tsx";
 
 const LocationSearch: React.FC = () => {
-   // TODO: refactor this component
    const { filters, setFilters } = useFiltersStore();
 
    const location = filters.location;
@@ -14,8 +13,8 @@ const LocationSearch: React.FC = () => {
    useEffect(() => {
       if (debouncedInput?.trim()) {
          handleLocationSearch();
-      } else {
-         setFilters({ ...filters, zipCodes: [], currentPage: 0 });
+      } else if(filters.zipCodes!.length > 0){
+         setFilters({ ...filters, zipCodes: [], currentPage: 0, location: "" });
       }
    }, [debouncedInput]);
 

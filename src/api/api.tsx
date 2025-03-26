@@ -1,5 +1,5 @@
 ﻿import axios from "axios";
-import { Dog, FilterOptions, SearchLocation, SearchResults, User } from "./types.tsx";
+import { Dog, FilterOptions, SearchLocation, User } from "./types.tsx";
 
 const BASE_URL = "https://frontend-take-home-service.fetch.com";
 export const ITEMS_PER_REQUEST = 27;
@@ -120,7 +120,7 @@ export const search = async ({ breeds, name, zipCodes, minAge, maxAge, currentPa
 export const getDogs = async (ids: string[]) => {
     // console.log("ids to get=", ids.length)
 
-    const response = await dogs_api.post("/dogs", ids); //slice(0, ITEMS_PER_REQUEST)
+    const response = await dogs_api.post("/dogs", ids);
     return response.data;
 }
 
@@ -156,7 +156,7 @@ export const matchMe = async (dogsIds: string[]) => {
 }
 
 
-//helper 
+//helper function to chunk zipCodes array
 const chunkArray = (array: string[], chunkSize: number) => {
     return Array.from({ length: Math.ceil(array.length / chunkSize) }, (_, index) =>
         array.slice(index * chunkSize, index * chunkSize + chunkSize)

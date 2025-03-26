@@ -3,8 +3,10 @@ import { FilterOptions, SortCriteria } from "../api/types.tsx";
 
 interface FiltersState {
    filters: FilterOptions;
+   isLoading: boolean;
    setFilters: (filters: Partial<FiltersState["filters"]>) => void;
    resetFilters: () => void;
+   setLoading: (loading: boolean) => void;
 }
 
 export const useFiltersStore = create<FiltersState>((set) => ({
@@ -18,10 +20,13 @@ export const useFiltersStore = create<FiltersState>((set) => ({
       sortCriteria: SortCriteria.Breed,
       currentPage: 0
    },
-   setFilters: (newFilters) =>
+   isLoading: false,
+   setFilters: (newFilters) => {
       set((state) => ({
-         filters: { ...state.filters, ...newFilters },
-      })),
+            filters: { ...state.filters, ...newFilters },
+            isLoading: true
+         }))
+   },
    resetFilters: () =>
       set({
          filters: {
@@ -33,6 +38,8 @@ export const useFiltersStore = create<FiltersState>((set) => ({
             sortOrder: "asc",
             sortCriteria: SortCriteria.Breed,
             currentPage: 0
-         }
+         },
+         isLoading: false,
       }),
+   setLoading: (loading) => set({ isLoading: loading }),
 }));
