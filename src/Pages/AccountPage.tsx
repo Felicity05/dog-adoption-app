@@ -39,14 +39,15 @@ const AccountPage: React.FC = () => {
 
 
             {/* Favorite Dogs */}
-            <div className="w-full mt-6 p-6 rounded-lg
+            <div className="w-full mt-6 mb-15 p-6 rounded-lg
                             isolate aspect-video bg-white/20 shadow-lg ring-1 ring-gray-700/20 backdrop-blur-lg">
                 
                 <div className="flex gap-4">
                 <h2 className="text-3xl font-bold text-[#890A74]">Your Favorite Dogs</h2>
-                    <button onClick={handleCleanFavorites} className="text-[#890A74] hover:text-[#FFA900] transition-colors">
-                        <Trash2Icon size={28} className={`${favoritesDogs.length > 0 ? "fill-[#ffa900] hover:fill-none" : ""}`} />
-                </button>
+                    {favorites.length > 0 && 
+                        <button onClick={handleCleanFavorites} className="text-[#890A74] hover:text-[#FFA900] transition-colors">
+                            <Trash2Icon size={28} className={`${favoritesDogs.length > 0 ? "fill-[#ffa900] hover:fill-none" : ""}`} />
+                        </button>}
                 </div>
 
                 {/* Match Me Button */}

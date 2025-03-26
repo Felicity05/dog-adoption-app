@@ -13,12 +13,14 @@ const Card: React.FC<CardProps> = ({ dog, location }) => {
    const favorited = isFavorited(dog.id);
 
    return (
-      <div className="w-full max-w-[300px] rounded overflow-hidden shadow-lg bg-white relative">
+      <div className="w-full max-w-[300px] rounded-xl overflow-hidden bg-white relative
+                     shadow-[0_0_20px_rgba(0,0,0,0.15)]">
          
-         {/* Heart Icon in Top Right */}
+         {/* Heart Icon in Top Right -- change color to purple */}
          <button
             onClick={() => toggleFavorite(dog.id)}
-            className="absolute top-2 right-2 p-1 rounded-full bg-white/70 hover:bg-white shadow-md z-10">
+            className="absolute top-2 right-2 p-1 rounded-full bg-white/70 hover:bg-white shadow-md z-10
+                        ">
             <HeartIcon size={24}
                className={favorited ? "text-red-500 fill-red-500" : "text-gray-500"}
             />

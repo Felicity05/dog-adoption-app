@@ -70,7 +70,7 @@ export const DogSearchPage = () => {
    return (
       <div className="flex flex-col justify-center items-center w-full p-4">
          {/* Header Section */}
-         <div className="flex flex-col gap-2 justify-center items-center text-[#090325] my-3 text-center">
+         <div className="flex flex-col gap-2 justify-center items-center text-[#300d38] my-3 text-center">
             <h1 className="font-bold font-['Laurens'] text-3xl md:text-5xl">
                Find Your Newest Friend!
             </h1>

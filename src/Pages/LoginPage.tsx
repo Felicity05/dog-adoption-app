@@ -24,20 +24,19 @@ export const LoginPage = () => {
     }
 
     return (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 w-full max-w-7xl overflow-hidden">
             {/* Left Column: Text and Login Form */}
             <div className='flex flex-col gap-5 justify-center items-start'>
                 <h1 className='text-[#FBA919] font-[Laurens] [text-shadow:_0_1px_0_rgb(54_65_83_/_40%)]
-                                 text-4xl md:text-5xl lg:text-7xl'>
+                                 text-3xl md:text-4xl lg:text-6xl'>
                     Find a friend who’ll share life’s adventures with you!
                 </h1>
-                <p className='text-gray-700 font-medium text-base md:text-lg'>
+                <p className='text-gray-700 font-medium text-sm md:text-base lg:text-lg'>
                     Dinger makes finding your perfect dog simple and fun.
                     Just sign in, browse through adoptable pups, and save your favorites.
-                    Once you have your favorites we’ll help you find your perfect match and
-                    connect you with the shelter or foster home for the next steps.
+                    Once you have your favorites we’ll help you find your perfect match!
                 </p>
-                <div className="flex flex-col gap-5 pt-10 w-full">
+                <div className="flex flex-col gap-5 pt-5 w-full">
                     <input
                         type="name"
                         name="name"

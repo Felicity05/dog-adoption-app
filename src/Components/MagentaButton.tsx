@@ -13,7 +13,7 @@ const MagentaButton: React.FC<MagentaButtonProps> = ({
                                                          disabled = false,
                                                          buttonType = 'primary',
                                                      }) => {
-    const baseClasses = `px-15 py-2 font-semibold rounded-md focus:outline-none w-full md:w-70
+    const baseClasses = `px-15 py-2 font-semibold rounded-lg focus:outline-none w-full md:w-70
                         flex justify-center`;
     const buttonStyles = {
         primary: `bg-[#890A74] text-[#FFA900] hover:bg-[#FFA900] hover:text-[#890A74] `,
