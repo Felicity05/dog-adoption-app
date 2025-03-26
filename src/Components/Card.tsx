@@ -12,13 +12,8 @@ const Card: React.FC<CardProps> = ({ dog, location }) => {
    const { toggleFavorite, isFavorited } = favoritesStore();
    const favorited = isFavorited(dog.id);
 
-   // Add to your component
-   const [isAnimating, setIsAnimating] = React.useState(false);
-
    const handleClick = () => {
       toggleFavorite(dog.id);
-      setIsAnimating(true);
-      setTimeout(() => setIsAnimating(false), 500);
    };
 
    return (
