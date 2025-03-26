@@ -1,22 +1,15 @@
 import { HeartIcon, LogOut, User } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { logOut } from '../api/api';
 import { favoritesStore } from '../store/favoritesStore';
+import { useAuthRedirect } from '../hooks/useAuthRedirect';
 
 const Navbar: React.FC = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { favoritesCount } = favoritesStore();
     const [isAtTop, setIsAtTop] = useState(true);
-
-    // Handle logout: clear user session and redirect to login page
-    const handleLogout = async () => {
-        const response = await logOut();
-        console.log(response);
-        localStorage.removeItem("user"); // Example: Adjust this to match your app's auth system
-        navigate("/");
-    };
+    const { handleLogout } = useAuthRedirect();
 
     useEffect(() => {
         const handleScroll = () => {
