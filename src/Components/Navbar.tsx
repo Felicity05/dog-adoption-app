@@ -53,7 +53,7 @@ const Navbar: React.FC = () => {
                                 onClick={() => navigate("/account")}
                                 className="text-[#890A74] hover:text-[#FFA900] transition-colors relative"
                             >
-                                <HeartIcon size={26} className="hover:fill-[#FFA900]" />
+                                <HeartIcon size={26} className={favoritesCount > 0 ? "fill-[#890A74] hover:fill-[#FFA900]" : "hover:fill-[#FFA900]"} />
                                 {favoritesCount > 0 && (
                                     <span className="absolute -top-2 -right-2 bg-[#FFA900] text-[#890A74] text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
                                         {favoritesCount}

@@ -1,34 +1,29 @@
 import React, { useEffect } from "react";
 import { useDebounce } from "use-debounce";
-import { getLocationsFromZipCode, ITEMS_PER_REQUEST, searchLocations } from "../api/api.tsx";
+import { getLocationsFromZipCode, searchLocations } from "../api/api.tsx";
 import { useFiltersStore } from "../store/filtersStore.tsx";
 import { LocationObject } from "../api/types.tsx";
-import Pagination from "./Pagination.tsx";
 
 const LocationSearch: React.FC = () => {
-   const {
-      filters, setFilters,
-      searchLocationCurrentPage, setSearchLocationPage,
-      searchLocationTotalItems, setSearchLocationTotalItems
-   } = useFiltersStore();
+   // TODO: refactor this component
+   const { filters, setFilters } = useFiltersStore();
 
    const location = filters.location;
    const [debouncedInput] = useDebounce(location, 1000); // Debounce input
 
    useEffect(() => {
       if (debouncedInput?.trim()) {
-         handleLocationSearch(searchLocationCurrentPage);
+         handleLocationSearch();
       } else {
          setFilters({ ...filters, zipCodes: [], currentPage: 0 });
-         setSearchLocationTotalItems(0);
       }
-   }, [debouncedInput, searchLocationCurrentPage]);
+   }, [debouncedInput]);
 
    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
       setFilters({ ...filters, location: e.target.value });
    };
 
-   const handleLocationSearch = async (page: number) => {
+   const handleLocationSearch = async () => {
       try {
          const locationsOptions = debouncedInput!
             .split(',') // Split only by commas
@@ -44,7 +39,7 @@ const LocationSearch: React.FC = () => {
          if (zipcodes.length > 0) {
             await validateZipCodes(zipcodes);
          } else if (citiesOrStates.length > 0) {
-            await getZipsFromCityOrStates(citiesOrStates, page);
+            await getZipsFromCityOrStates(citiesOrStates);
          }
       } catch (error) {
          console.error("Error searching locations:", error);
@@ -62,13 +57,10 @@ const LocationSearch: React.FC = () => {
       // Update filters state with the valid zip codes 
       // - set zip options as the zipCodes attributes on the filters state
       setFilters({ ...filters, zipCodes: validZipCodes, currentPage: 0 });
-      setSearchLocationTotalItems(validZipCodes.length);
    }
 
    // If input is a city/state, fetch zip codes
-   const getZipsFromCityOrStates = async (locations: string[], page: number) => {
-      // console.log("locations= ", locations)
-
+   const getZipsFromCityOrStates = async (locations: string[]) => {
       let cities: string[] = [];
       let states: string[] = [];
 
@@ -80,23 +72,11 @@ const LocationSearch: React.FC = () => {
          }
       });
 
-      const response = await searchLocations({ city: cities[0], states }, page);
-      console.log("searchLocations response=", response);
-
-      setSearchLocationTotalItems(response.total);
-      setSearchLocationPage(page);
-
+      const response = await searchLocations({ city: cities[0], states });
       const zips = response.results.map((loc: LocationObject) => loc.zip_code);
-      // console.log(zips)
 
-      setFilters({ ...filters, zipCodes: zips})
+      setFilters({ ...filters, zipCodes: zips, currentPage: 0 })
    }
-
-   // const handleLocationPageChange = (selectedPage: number) => {
-   //    if (selectedPage >= 0 && selectedPage < Math.ceil(searchLocationTotalItems / ITEMS_PER_REQUEST)) {
-   //       handleLocationSearch(selectedPage);
-   //    }
-   // };
 
 
    return (
@@ -114,18 +94,6 @@ const LocationSearch: React.FC = () => {
             className="block w-full h-10 border-2 border-[#890A74] rounded
                            focus:outline-none focus:border-[#FFA900]"
          />
-
-         {/* Location-specific pagination
-         {searchLocationTotalItems > ITEMS_PER_REQUEST && (
-            <div className="mt-2">
-               <Pagination
-                  currentPage={searchLocationCurrentPage}
-                  totalItems={searchLocationTotalItems}
-                  onPageChange={handleLocationPageChange}
-               />
-            </div>
-         )} */}
-
       </div>
    );
 };

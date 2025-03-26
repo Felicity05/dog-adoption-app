@@ -1,4 +1,4 @@
-import { fetchDogsInBatches, getDogs, getLocationsFromZipCode, ITEMS_PER_REQUEST, search } from "../api/api.tsx";
+import { getDogs, getLocationsFromZipCode, ITEMS_PER_REQUEST, search } from "../api/api.tsx";
 import { useEffect, useState } from "react";
 import Card from "../Components/Card.tsx";
 import { Dog, LocationObject } from "../api/types.tsx";
@@ -13,33 +13,31 @@ export const DogSearchPage = () => {
    const [totalItems, setTotalItems] = useState<number>(0);
    const [loading, setLoading] = useState(true);
    const [locationMap, setLocationMap] = useState<Map<string, LocationObject>>(new Map());
-   const { filters, setFilters, 
-        searchLocationCurrentPage, setSearchLocationPage,
-        searchLocationTotalItems
-   } = useFiltersStore();
+   const { filters, setFilters } = useFiltersStore();
+
+   // TODO: enable a loading state for location search
 
    useEffect(() => {
       const fetchDogs = async () => {
+         setLoading(true);
          try {
             const response = await search({ ...filters });
-            const ids = response.resultIds;
+            
+            const ids = response.resultIds.slice(0, ITEMS_PER_REQUEST); // Ensure only 27 items per page
+            // console.log("resultsIds length", ids.length)
 
-            // let totalItems 
-            // if(filters.zipCodes!.length > 0)
-            //    totalItems = searchLocationTotalItems; 
-            // else 
-            const   totalItems = response.total;
-            console.log("total items", totalItems)
+            const totalItems = response.total;
+            setTotalItems(totalItems);
+            // console.log("total items for pagination=", totalItems)
 
             if (ids.length > 0) {
                const dogsData = await getDogs(ids);
-               console.log("ids passing to function=", ids.length)
                const zips = dogsData.map((dog: Dog) => dog.zip_code);
                const locs = await getLocationsFromZipCode(zips)
 
                const newLocationMap: Map<string, LocationObject> = new Map(
                   locs
-                     .filter((loc: LocationObject | null) => loc !== null) // Filter out nulls
+                     .filter((loc: LocationObject | null) => loc !== null) // Filters out nulls
                      .map((loc: LocationObject) => [loc.zip_code, loc])
                );
 
@@ -48,22 +46,19 @@ export const DogSearchPage = () => {
             } else {
                setDogs([]);
             }
-            setTotalItems(totalItems);
-            setLoading(false);
          } catch (error) {
             console.error("Error fetching dogs:", error);
          }
+         setLoading(false);
       };
 
       fetchDogs();
-   }, [filters, searchLocationCurrentPage])
+   }, [filters])
 
    //Handle page change
    const currentPageHandler = (selectedPage: number) => {
-      if (selectedPage >= 0 && selectedPage <= totalItems / ITEMS_PER_REQUEST) {
-         // if(filters.zipCodes!.length > 0) setSearchLocationPage(selectedPage)
-         // else 
-            setFilters({ ...filters, currentPage: selectedPage })
+      if (selectedPage >= 0 && selectedPage <= Math.ceil(totalItems / ITEMS_PER_REQUEST)) {
+         setFilters({ ...filters, currentPage: selectedPage })
       }
    }
 
@@ -92,7 +87,7 @@ export const DogSearchPage = () => {
                {loading ? (
                   <Loading />
                ) : dogs.length > 0 ? (
-                  <div className="flex flex-col gap-2 justify-center items-center w-full">
+                  <div className="flex flex-col gap-2 justify-center items-center w-full pb-15">
                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                         {dogs.map((dog) => (
                            <Card key={dog.id} dog={dog} location={locationMap.get(dog.zip_code)} />
@@ -100,7 +95,7 @@ export const DogSearchPage = () => {
                      </div>
                      {totalItems > ITEMS_PER_REQUEST && (
                         <Pagination
-                           currentPage={filters.currentPage !== 0 ? filters.currentPage : searchLocationCurrentPage}
+                           currentPage={filters.currentPage}
                            totalItems={totalItems}
                            onPageChange={currentPageHandler}
                         />
