@@ -1,4 +1,4 @@
-import { HeartIcon, LogOut, User } from 'lucide-react';
+import { HeartIcon, LogOut } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { favoritesStore } from '../store/favoritesStore';
