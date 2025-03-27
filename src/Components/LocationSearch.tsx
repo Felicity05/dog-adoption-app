@@ -74,7 +74,9 @@ const LocationSearch: React.FC = () => {
       const response = await searchLocations({ city: cities[0], states });
       const zips = response.results.map((loc: LocationObject) => loc.zip_code);
 
-      setFilters({ ...filters, zipCodes: zips, currentPage: 0 })
+      console.log("zipcodes to pass to search ", zips)
+
+      setFilters({ ...filters, zipCodes: zips.length === 0 ? null : zips, currentPage: 0 })
    }
 
 

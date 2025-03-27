@@ -15,6 +15,20 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+@font-face {
+  font-family: "Laurens"; 
+  src: url("./assets/fonts/Laurens.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Lexend";
+  src: url("./assets/fonts/Lexend.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 .display-font {
   font-family: 'Laurens', serif;
   color: #090325;

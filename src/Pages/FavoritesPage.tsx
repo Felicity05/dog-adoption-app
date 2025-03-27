@@ -6,9 +6,9 @@ import Match from "../Components/Match";
 import { Trash2Icon } from "lucide-react";
 
 
-const AccountPage: React.FC = () => {
+const FavoritesPage: React.FC = () => {
     const { favorites, clearFavorites } = favoritesStore(); // Fetch favorited dogs
-    const user = localStorage.getItem("user"); 
+    const user = localStorage.getItem("user");
     const [favoritesDogs, setFavoritesDogs] = useState<Dog[]>([]);
 
     //Persist favorites after login
@@ -33,18 +33,17 @@ const AccountPage: React.FC = () => {
         <div className="w-full max-w-6xl mx-auto">
             {/* User Info */}
             <div className="w-full p-6 rounded-lg">
-                <h2 className="text-2xl font-bold text-[#890A74]">User Account</h2>
-                <p className="my-5 text-2xl text-gray-600">Hello, <strong>{user || "Guest"}</strong>!</p>
+                <p className="my-5 text-3xl text-gray-600">Hello, <strong>{user || "Guest"}</strong>!</p>
             </div>
 
 
             {/* Favorite Dogs */}
             <div className="w-full mt-6 mb-15 p-6 rounded-lg
                             isolate aspect-video bg-white/20 shadow-lg ring-1 ring-gray-700/20 backdrop-blur-lg">
-                
+
                 <div className="flex gap-4">
-                <h2 className="text-3xl font-bold text-[#890A74]">Your Favorite Dogs</h2>
-                    {favorites.length > 0 && 
+                    <h2 className="text-3xl font-bold text-[#890A74]">Your Favorite Dogs</h2>
+                    {favorites.length > 0 &&
                         <button onClick={handleCleanFavorites} className="text-[#890A74] hover:text-[#FFA900] transition-colors">
                             <Trash2Icon size={28} className={`${favoritesDogs.length > 0 ? "fill-[#ffa900] hover:fill-none" : ""}`} />
                         </button>}
@@ -73,4 +72,4 @@ const AccountPage: React.FC = () => {
     );
 };
 
-export default AccountPage;
+export default FavoritesPage;

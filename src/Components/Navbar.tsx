@@ -40,10 +40,10 @@ const Navbar: React.FC = () => {
 
                     {/* User Icons */}
                     {location.pathname !== "/" && (
-                        <div className="flex items-center space-x-2">
+                        <div className="flex items-center space-x-3">
                             {/* User Favorites Icon */}
                             <button
-                                onClick={() => navigate("/account")}
+                                onClick={() => navigate("/favorites")}
                                 className="text-[#890A74] hover:text-[#FFA900] transition-colors relative"
                             >
                                 <HeartIcon size={26} className={favoritesCount > 0 ? "fill-[#890A74] hover:fill-[#FFA900]" : "hover:fill-[#FFA900]"} />
@@ -52,13 +52,6 @@ const Navbar: React.FC = () => {
                                         {favoritesCount}
                                     </span>
                                 )}
-                            </button>
-                            {/* User Account Icon */}
-                            <button
-                                onClick={() => navigate("/account")}
-                                className="text-[#890A74] hover:text-[#FFA900] transition-colors"
-                            >
-                                <User size={26} />
                             </button>
 
                             {/* Logout Icon */}

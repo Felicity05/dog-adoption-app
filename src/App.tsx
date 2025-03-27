@@ -4,7 +4,7 @@ import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import { DogSearchPage } from "./Pages/DogSearchPage.tsx";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Layout from './Pages/Layout.tsx';
-import AccountPage from './Pages/AccountPage.tsx';
+import FavoritesPage from './Pages/FavoritesPage.tsx';
 
 function App() {
 
@@ -21,9 +21,9 @@ function App() {
                         <DogSearchPage />
                     </Layout>
                 } />
-                <Route path="/account" element={
+                <Route path="/favorites" element={
                     <Layout>
-                        <AccountPage />
+                        <FavoritesPage />
                     </Layout>} />
             </Routes>
         </Router>

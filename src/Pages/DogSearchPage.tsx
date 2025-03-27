@@ -28,6 +28,11 @@ export const DogSearchPage = () => {
 
          setLoading(true); // Set loading to true when fetching starts
          try {
+            if(debouncedFilters.zipCodes === null) {
+               setLoading(false);
+               return;
+            }
+
             const response = await search({ ...debouncedFilters });
             const ids = response.resultIds.slice(0, ITEMS_PER_REQUEST); // Ensure only 27 items per page
             // console.log("resultsIds length", ids.length)

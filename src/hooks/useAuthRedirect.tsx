@@ -1,8 +1,10 @@
 import { useNavigate } from "react-router-dom";
 import { logOut } from "../api/api";
+import { useFiltersStore } from "../store/filtersStore";
 
 export const useAuthRedirect = () => {
     const navigate = useNavigate();
+    const { resetFilters } = useFiltersStore();
 
     const redirectAfterLogin = (isSuccessful: boolean) => {
         if (isSuccessful) {
@@ -15,10 +17,10 @@ export const useAuthRedirect = () => {
 
     // Handle logout: clear user session and redirect to login page
     const handleLogout = async () => {
-        const response = await logOut();
-        console.log(response);
+        await logOut();
         localStorage.removeItem("user");
         navigate("/");
+        resetFilters();
     };
 
     return { redirectAfterLogin, handleLogout };
