@@ -44,8 +44,6 @@ export const search = async ({ breeds, name, zipCodes, minAge, maxAge, currentPa
     sortCriteria, sortOrder }: FilterOptions) => {
 
     const sort = `${sortCriteria}:${sortOrder}`;
-    console.log("current page for search data= ", currentPage)
-    console.log("total zipCodes to search for dogs= ", zipCodes?.length)
 
     // If zipCodes is too long, split into chunks
     const zipCodeChunks = (zipCodes!.length > MAX_ZIPCODES_PER_REQUEST) ?
@@ -75,7 +73,6 @@ export const search = async ({ breeds, name, zipCodes, minAge, maxAge, currentPa
         allResults = responses.flatMap(res => res.data.resultIds);
         totalItemsPerChunk = responses.flatMap(res => res.data.total);
         totalItems = responses.reduce((accumulatedSum, res) => accumulatedSum + res.data.total, 0);
-
     }
 
     // When moving to subsequent pages 
@@ -94,8 +91,8 @@ export const search = async ({ breeds, name, zipCodes, minAge, maxAge, currentPa
     const chunkPage = currentPage - accumulatedPages;
     const pageOffset = chunkPage * ITEMS_PER_REQUEST;
 
-    console.log(`Fetching chunk ${currentChunkIndex}, page ${chunkPage}`);
-    console.log("totalItemsPerChunk= ", totalItemsPerChunk)
+    console.log(`Fetching chunk ${currentChunkIndex}, page ${chunkPage}, total items ${totalItems},
+         items per chunk ${totalItemsPerChunk}`);
 
     // Fetch data from the correct chunk
     const responses = await dogs_api.get("/dogs/search", {

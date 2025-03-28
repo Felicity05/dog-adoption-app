@@ -4,22 +4,27 @@ import { getLocationsFromZipCode, searchLocations } from "../api/api.tsx";
 import { useFiltersStore } from "../store/filtersStore.tsx";
 import { LocationObject } from "../api/types.tsx";
 
-const LocationSearch: React.FC = () => {
+interface LocationSearchProps {
+   location: string;
+   setLocation: (loc: string) => void;
+}
+
+const LocationSearch: React.FC<LocationSearchProps> = ({location, setLocation}) => {
    const { filters, setFilters } = useFiltersStore();
 
-   const location = filters.location;
-   const [debouncedInput] = useDebounce(location, 1000); // Debounce input
+   const [debouncedInput, { flush }] = useDebounce(location, 1000); // Debounce input
 
    useEffect(() => {
       if (debouncedInput?.trim()) {
          handleLocationSearch();
-      } else if(filters.zipCodes!.length > 0){
-         setFilters({ ...filters, zipCodes: [], currentPage: 0, location: "" });
+      } else {
+         flush(); // Force immediate update when clearing
+         setFilters({ ...filters, zipCodes: [], currentPage: 0});
       }
    }, [debouncedInput]);
 
    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      setFilters({ ...filters, location: e.target.value });
+      setLocation(e.target.value)
    };
 
    const handleLocationSearch = async () => {
@@ -53,9 +58,11 @@ const LocationSearch: React.FC = () => {
          .filter((location: Location | null) => location !== null)
          .map((loc: { zip_code: string; }) => loc.zip_code)
 
+      // console.log("valid zipcodes for entered zipcode=", validZipCodes)   
+
       // Update filters state with the valid zip codes 
       // - set zip options as the zipCodes attributes on the filters state
-      setFilters({ ...filters, zipCodes: validZipCodes, currentPage: 0 });
+      setFilters({ ...filters, zipCodes: validZipCodes.length === 0 ? null : validZipCodes, currentPage: 0 });
    }
 
    // If input is a city/state, fetch zip codes
@@ -74,8 +81,7 @@ const LocationSearch: React.FC = () => {
       const response = await searchLocations({ city: cities[0], states });
       const zips = response.results.map((loc: LocationObject) => loc.zip_code);
 
-      console.log("zipcodes to pass to search ", zips)
-
+      // console.log("zipcodes to pass to search ", zips)
       setFilters({ ...filters, zipCodes: zips.length === 0 ? null : zips, currentPage: 0 })
    }
 

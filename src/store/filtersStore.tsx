@@ -15,7 +15,6 @@ export const useFiltersStore = create<FiltersState>((set) => ({
       zipCodes: [],
       minAge: null,
       maxAge: null,
-      location: "",
       sortOrder: "asc",
       sortCriteria: SortCriteria.Breed,
       currentPage: 0
@@ -23,9 +22,9 @@ export const useFiltersStore = create<FiltersState>((set) => ({
    isLoading: false,
    setFilters: (newFilters) => {
       set((state) => ({
-            filters: { ...state.filters, ...newFilters },
-            isLoading: true
-         }))
+         filters: { ...state.filters, ...newFilters },
+         isLoading: true
+      }))
    },
    resetFilters: () =>
       set({
@@ -34,7 +33,6 @@ export const useFiltersStore = create<FiltersState>((set) => ({
             zipCodes: [],
             minAge: null,
             maxAge: null,
-            location: "",
             sortOrder: "asc",
             sortCriteria: SortCriteria.Breed,
             currentPage: 0

@@ -41,7 +41,7 @@ export enum SortCriteria {
 
 interface FilterOptions {
     breeds?: string[];
-    zipCodes?: string[];
+    zipCodes?: string[] | null;
     name?: string;
     location?: string,
     minAge?: number | null;
